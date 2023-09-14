@@ -39,6 +39,7 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.search.FieldComparator;
 import org.apache.lucene.search.FuzzyTermsEnum;
 import org.apache.lucene.search.LeafFieldComparator;
+import org.apache.lucene.search.MatchAllDocsQuery;
 import org.apache.lucene.search.MatchNoDocsQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Scorable;
@@ -232,6 +233,26 @@ public class QueryComponent extends SearchComponent
     //Input validation.
     if (rb.getSortSpec().getOffset() < 0) {
       throw new SolrException(SolrException.ErrorCode.BAD_REQUEST, "'start' parameter cannot be negative");
+    }
+    checkAliveCheckQuery(rb, req);
+  }
+
+  private static void checkAliveCheckQuery(ResponseBuilder rb, SolrQueryRequest req) {
+    if (rb.getQuery() instanceof MatchAllDocsQuery) {
+      SortSpec sort = rb.getSortSpec();
+      if (sort != null) {
+        if (sort.getSort().getSort().length == 1 &&
+            sort.getSort().getSort()[0].getType().equals(SortField.Type.DOC) &&
+            rb.getFilters() == null &&
+            rb.getCursorMark() == null &&
+            rb.getGroupingSpec() == null &&
+            "0".equals(req.getParams().get("rows")) &&
+            req.getParams().get("facet") == null &&
+            "false".equals(req.getParams().get("distrib"))
+        ) {
+          rb.setQuery(new MatchNoDocsQuery());
+        }
+      }
     }
   }
 
