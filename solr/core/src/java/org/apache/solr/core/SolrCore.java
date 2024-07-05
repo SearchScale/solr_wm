@@ -108,8 +108,6 @@ import org.apache.solr.handler.ReplicationHandler;
 import org.apache.solr.handler.RequestHandlerBase;
 import org.apache.solr.handler.SolrConfigHandler;
 import org.apache.solr.handler.component.HighlightComponent;
-import org.apache.solr.handler.component.QueryComponent;
-import org.apache.solr.handler.component.ResponseBuilder;
 import org.apache.solr.handler.component.SearchComponent;
 import org.apache.solr.logging.MDCLoggingContext;
 import org.apache.solr.metrics.SolrCoreMetricManager;
