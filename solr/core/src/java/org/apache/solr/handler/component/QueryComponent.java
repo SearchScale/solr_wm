@@ -246,7 +246,7 @@ public class QueryComponent extends SearchComponent
   public static boolean isLivenessCheck(ResponseBuilder rb, SolrQueryRequest req) {
     if (rb.getQuery() instanceof MatchAllDocsQuery) {
       SortSpec sort = rb.getSortSpec();
-      if (sort != null) {
+      if (sort != null && sort.getSort() != null) {
         if (sort.getSort().getSort().length == 1 &&
             sort.getSort().getSort()[0].getType().equals(SortField.Type.DOC) &&
             rb.getFilters() == null &&
