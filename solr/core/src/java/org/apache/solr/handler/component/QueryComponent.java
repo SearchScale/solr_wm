@@ -250,6 +250,7 @@ public class QueryComponent extends SearchComponent
             req.getParams().get("facet") == null &&
             "false".equals(req.getParams().get("distrib"))
         ) {
+          log.info("zombie live check query rewritten {}", req.getParamString());
           rb.setQuery(new MatchNoDocsQuery());
         }
       }
