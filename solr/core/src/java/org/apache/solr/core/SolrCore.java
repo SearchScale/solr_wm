@@ -2654,14 +2654,9 @@ public final class SolrCore implements SolrInfoBean, SolrMetricProducer, Closeab
       if (requestLog.isInfoEnabled()) {
         requestLog.info(rsp.getToLogAsString(logid));
       }
-      if(livenessCheckLog.isInfoEnabled()) {
-        SolrRequestInfo requestInfo = SolrRequestInfo.getRequestInfo();
-        if(requestInfo != null){
-          ResponseBuilder rb = requestInfo.getResponseBuilder();
-          if(rb !=null && QueryComponent.isLivenessCheck(rb, req)){
-            livenessCheckLog.info(rsp.getToLogAsString(logid));
-          }
-        }
+      if(livenessCheckLog.isInfoEnabled() &&
+          (req.getParamString().equals("q=*:*&distrib=false&sort=_docid_+asc&rows=0&wt=javabin&version=2")) ) {
+        livenessCheckLog.info(rsp.getToLogAsString(logid));
       }
 
       /* slowQueryThresholdMillis defaults to -1 in SolrConfig -- not enabled.*/
