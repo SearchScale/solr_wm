@@ -241,6 +241,13 @@ public class QueryComponent extends SearchComponent
     //params={q=*:*&distrib=false&sort=_docid_+asc&rows=0&wt=javabin&version=2}
     // this is the syntax of liveness check query fired by LBSolrClient
     // this may take a lot of time for a large index. So we rewrite it to MatchNoDocsQuery
+    if(isLivenessCheck(rb, req)){
+      log.info("zombie live check query rewritten {}", req.getParamString());
+      rb.setQuery(new MatchNoDocsQuery());
+    };
+  }
+
+  public static boolean isLivenessCheck(ResponseBuilder rb, SolrQueryRequest req) {
     if (rb.getQuery() instanceof MatchAllDocsQuery) {
       SortSpec sort = rb.getSortSpec();
       if (sort != null) {
@@ -253,11 +260,11 @@ public class QueryComponent extends SearchComponent
             req.getParams().get("facet") == null &&
             "false".equals(req.getParams().get("distrib"))
         ) {
-          log.info("zombie live check query rewritten {}", req.getParamString());
-          rb.setQuery(new MatchNoDocsQuery());
+          return true;
         }
       }
     }
+    return false;
   }
 
   protected void prepareGrouping(ResponseBuilder rb) throws IOException {
