@@ -238,6 +238,9 @@ public class QueryComponent extends SearchComponent
   }
 
   private static void checkAliveCheckQuery(ResponseBuilder rb, SolrQueryRequest req) {
+    //params={q=*:*&distrib=false&sort=_docid_+asc&rows=0&wt=javabin&version=2}
+    // this is the syntax of liveness check query fired by LBSolrClient
+    // this may take a lot of time for a large index. So we rewrite it to MatchNoDocsQuery
     if (rb.getQuery() instanceof MatchAllDocsQuery) {
       SortSpec sort = rb.getSortSpec();
       if (sort != null) {
