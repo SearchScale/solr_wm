@@ -80,7 +80,7 @@ public abstract class LBSolrClient extends SolrClient {
   private int interval = CHECK_INTERVAL;
   private final AtomicInteger counter = new AtomicInteger(-1);
 
-  private static final SolrQuery solrQuery = new SolrQuery("*:*");
+  private static final SolrQuery solrQuery = new SolrQuery("-*:*");
   protected volatile ResponseParser parser;
   protected volatile RequestWriter requestWriter;
 
