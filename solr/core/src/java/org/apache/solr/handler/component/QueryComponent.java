@@ -237,7 +237,7 @@ public class QueryComponent extends SearchComponent
     //params={q=*:*&distrib=false&sort=_docid_+asc&rows=0&wt=javabin&version=2}
     // this is the syntax of liveness check query fired by LBSolrClient
     // this may take a lot of time for a large index. So we rewrite it to MatchNoDocsQuery
-    if (req.getParamString().equals("q=*:*&distrib=false&sort=_docid_+asc&rows=0&wt=javabin&version=2")) {
+    if ("q=*:*&distrib=false&sort=_docid_+asc&rows=0&wt=javabin&version=2".equals(req.getParamString())) {
       log.info("zombie live check query rewritten {}", req.getParamString());
       rb.setQuery(new MatchNoDocsQuery());
     }

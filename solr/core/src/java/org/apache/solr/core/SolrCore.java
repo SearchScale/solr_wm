@@ -2653,7 +2653,7 @@ public final class SolrCore implements SolrInfoBean, SolrMetricProducer, Closeab
         requestLog.info(rsp.getToLogAsString(logid));
       }
       if(livenessCheckLog.isInfoEnabled() &&
-          (req.getParamString().equals("q=*:*&distrib=false&sort=_docid_+asc&rows=0&wt=javabin&version=2")) ) {
+          ("q=*:*&distrib=false&sort=_docid_+asc&rows=0&wt=javabin&version=2".equals(req.getParamString()))) {
         livenessCheckLog.info(rsp.getToLogAsString(logid));
       }
 
