@@ -193,7 +193,6 @@ public final class SolrCore implements SolrInfoBean, SolrMetricProducer, Closeab
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
   private static final Logger requestLog = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getName() + ".Request"); //nowarn
   private static final Logger slowLog = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getName() + ".SlowRequest"); //nowarn
-  private static final Logger livenessCheckLog = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getName() + ".LivenessCheckRequest"); //nowarn
 
   private String name;
   private String logid; // used to show what name is set
@@ -2654,12 +2653,13 @@ public final class SolrCore implements SolrInfoBean, SolrMetricProducer, Closeab
       if (requestLog.isInfoEnabled()) {
         requestLog.info(rsp.getToLogAsString(logid));
       }
-      if(livenessCheckLog.isInfoEnabled()) {
+
+      if(requestLog.isWarnEnabled()) {
         SolrRequestInfo requestInfo = SolrRequestInfo.getRequestInfo();
-        if(requestInfo != null){
+        if (requestInfo != null) {
           ResponseBuilder rb = requestInfo.getResponseBuilder();
-          if(rb !=null && QueryComponent.isLivenessCheck(rb, req)){
-            livenessCheckLog.info(rsp.getToLogAsString(logid));
+          if (rb != null && QueryComponent.isLivenessCheck(rb, req)) {
+            requestLog.warn(rsp.getToLogAsString(logid));
           }
         }
       }
