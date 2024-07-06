@@ -115,8 +115,6 @@ import org.apache.solr.util.SolrPluginUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.apache.solr.common.params.CommonParams.DISTRIB;
-import static org.apache.solr.common.params.CommonParams.ROWS;
 
 
 /**
@@ -255,9 +253,9 @@ public class QueryComponent extends SearchComponent
             rb.getFilters() == null &&
             rb.getCursorMark() == null &&
             rb.getGroupingSpec() == null &&
-            "0".equals(req.getParams().get(ROWS)) &&
+            "0".equals(req.getParams().get(CommonParams.ROWS)) &&
             req.getParams().get("facet") == null &&
-            "false".equals(req.getParams().get(DISTRIB))
+            "false".equals(req.getParams().get(CommonParams.DISTRIB))
         ) {
           return true;
         }
@@ -778,10 +776,10 @@ public class QueryComponent extends SearchComponent
     // we could just specify that this is a shard request.
     if(rb.shards_rows > -1) {
       // if the client set shards.rows set this explicity
-      sreq.params.set(ROWS,rb.shards_rows);
+      sreq.params.set(CommonParams.ROWS,rb.shards_rows);
     } else {
       // what if rows<0 as it is allowed for grouped request??
-      sreq.params.set(ROWS, rb.getSortSpec().getOffset() + rb.getSortSpec().getCount());
+      sreq.params.set(CommonParams.ROWS, rb.getSortSpec().getOffset() + rb.getSortSpec().getCount());
     }
 
     sreq.params.set(ResponseBuilder.FIELD_SORT_VALUES,"true");
