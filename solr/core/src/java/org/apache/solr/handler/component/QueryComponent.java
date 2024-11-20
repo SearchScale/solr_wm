@@ -225,6 +225,13 @@ public class QueryComponent extends SearchComponent
     if (rb.getSortSpec().getOffset() < 0) {
       throw new SolrException(SolrException.ErrorCode.BAD_REQUEST, "'start' parameter cannot be negative");
     }
+    //params={q=*:*&distrib=false&sort=_docid_+asc&rows=0&wt=javabin&version=2}
+    // this is the syntax of liveness check query fired by LBSolrClient
+    // this may take a lot of time for a large index. So we rewrite it to MatchNoDocsQuery
+    if ("q=*:*&distrib=false&sort=_docid_+asc&rows=0&wt=javabin&version=2".equals(req.getParamString())) {
+      log.info("zombie live check query rewritten {}", req.getParamString());
+      rb.setQuery(new MatchNoDocsQuery());
+    }
   }
 
   protected void prepareGrouping(ResponseBuilder rb) throws IOException {

@@ -189,6 +189,7 @@ public final class SolrCore implements SolrInfoBean, SolrMetricProducer, Closeab
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
   private static final Logger requestLog = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getName() + ".Request"); //nowarn
   private static final Logger slowLog = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getName() + ".SlowRequest"); //nowarn
+  private static final Logger livenessCheckLog = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getName() + ".LivenessCheckRequest"); //nowarn
 
   private String name;
   private String logid; // used to show what name is set
@@ -2640,6 +2641,10 @@ public final class SolrCore implements SolrInfoBean, SolrMetricProducer, Closeab
     if (rsp.getToLog().size() > 0) {
       if (requestLog.isInfoEnabled()) {
         requestLog.info(rsp.getToLogAsString(logid));
+      }
+      if(livenessCheckLog.isInfoEnabled() &&
+          ("q=*:*&distrib=false&sort=_docid_+asc&rows=0&wt=javabin&version=2".equals(req.getParamString()))) {
+        livenessCheckLog.info(rsp.getToLogAsString(logid));
       }
 
       /* slowQueryThresholdMillis defaults to -1 in SolrConfig -- not enabled.*/
